@@ -1,6 +1,15 @@
 # TIFR Lean Tutorial
 
-This repository is for a Lean tutorial at the [Tata Institute for Fundamental Research](https://www.tifr.res.in), Mumbai, on 3 and 4 August 2026.
+This repository is for a Lean tutorial at the [Tata Institute for Fundamental Research](https://www.tifr.res.in), Mumbai, on 3 and 4 August 2026. For practical info, see the [INFO document](https://github.com/thefundamentaltheor3m/TIFR-Tutorial/blob/main/INFO.pdf). A summary of the contents of the document is given below.
+
+## Schedule
+
+- **Session 1:** Monday 3 Aug 2026, 10:00 to 12:00 (break from 1:50 to 11:10)
+- **Session 2:** Monday 3 Aug 2026, 14:00 to 16:00 (break from 14:50 to 15:10)
+- **Session 3:** Tuesday 4 Aug 2026, 09:30 to 11:30 (break from 10:20 to 10:40)
+- **Session 4:** Tuesday 4 Aug 2026, 13:30 to 15:30 (break from 14:20 to 14:40)
+
+Room information TBA.
 
 ## Installing Lean
 
