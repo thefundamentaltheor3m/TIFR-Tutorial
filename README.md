@@ -1,6 +1,6 @@
-# TIFR-Tutorial
+# TIFR Lean Tutorial
 
-This repository is for tutorials to be conducted at TIFR on 3 and 4 August 2026 by Sidharth Hariharan.
+This repository is for a Lean tutorial at the [Tata Institute for Fundamental Research](https://www.tifr.res.in), Mumbai, on 3 and 4 August 2026.
 
 ## Installing Lean
 
