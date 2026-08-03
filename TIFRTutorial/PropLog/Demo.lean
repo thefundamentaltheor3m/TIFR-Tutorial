@@ -149,3 +149,90 @@ example : (P ↔ Q) → (Q ↔ R) → (P ↔ R) := by
   sorry
 
 end connectives
+
+section induction_pfs
+
+#check Nat.zero
+
+open Nat
+
+example : 2 = succ (succ 0) := rfl
+
+example : 2 * 3 * 4 = 24 := by
+  decide
+
+-- #synth DecidableEq Nat
+
+-- example : 2 * 3 * 4 = 25.0 := by decide
+
+example : 2 * 3 * 4 < 25 := by
+  decide
+
+example (x y : ℕ) (hx : x = 2) (hy : y = 3) : x * y = 6 := by
+  rw [hx]
+  rw [hy]
+
+example (x y : ℕ) (hx : x = 1) (hy : y = 3) : (x + x) * y = 6 := by
+  rw [hx, hy]
+
+example (x y : ℕ) (hx : 1 = x) (hy : y = 3) : (x + x) * y = 6 := by
+  rw [← hx, hy]
+
+def myProperty (n : ℕ) : Prop := Nat.Prime n
+
+example : Nat.zero = 0 := by simp
+
+#check Nat.zero_eq
+
+example : ∀ n : ℕ, n < n + 37 := by
+  -- `simp` also works
+  intro n
+  rw [lt_add_iff_pos_right]
+  positivity
+
+lemma foo1 : ∀ n : ℕ, n < n + 37 := by simp
+
+lemma foo2 (n : ℕ) : n < n + 37 := by simp
+
+lemma foo1_eq_foo2 : foo1 = foo2 := rfl
+
+open Finset
+
+lemma my_sum (n : ℕ) : 2 * ∑ i ∈ range (n + 1), (i : ℕ) = n * (n + 1) := by
+  induction n with
+  | zero => decide
+  | succ n induction_hyp =>
+    rw [sum_range_succ, mul_add, induction_hyp]
+    ring_nf
+    -- stop
+    -- calc
+    -- _ = 2 * (∑ i ∈ range (n + 1), (i : ℕ) + (n + 1)) := by
+    --   congr
+    --   rw [sum_range_succ_comm, add_comm]
+    -- _ = 2 * ∑ i ∈ range (n + 1), (i : ℕ) + 2 * (n + 1) := by
+    --   rw [mul_add]
+    -- _ = n * (n + 1) + 2 * (n + 1) := by
+    --   rw [ih]
+    -- _ = _ := by ring
+
+example (n : ℕ) : 2 * ∑ i ∈ range (n + 1), (i : ℕ) = n * (n + 1) := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    calc
+    _ = 2 * (∑ i ∈ range (n + 1), (i : ℕ) + (n + 1)) := by
+      -- congr
+      rw [sum_range_succ_comm, add_comm]
+    _ = 2 * ∑ i ∈ range (n + 1), (i : ℕ) + 2 * (n + 1) := by
+      rw [mul_add]
+    _ = n * (n + 1) + 2 * (n + 1) := by
+      rw [ih]
+    _ = _ := by ring
+
+lemma my_sum' (n : ℕ) : ∑ i ∈ range (n + 1), (i : ℚ) = n * (n + 1) / 2 := by
+  rw [eq_div_iff_mul_eq (by norm_num), mul_comm]
+  norm_cast
+  rw [← my_sum]
+  simp
+
+end induction_pfs
