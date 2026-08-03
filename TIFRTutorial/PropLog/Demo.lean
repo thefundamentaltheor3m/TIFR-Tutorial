@@ -60,13 +60,71 @@ end basic
 section connectives
 
 example : P ∧ Q → Q ∧ P := by
-  sorry
+  intro h'
+  obtain ⟨h, h2⟩ := h'
+  constructor
+  · exact h2
+  · exact h
+
+example : P ∧ Q → Q ∧ P := by
+  intro h
+  constructor
+  · exact h.right
+  · exact h.left
+
+example : P ∧ Q → Q ∧ P := by
+  intro ⟨(h : P), (h2 : Q)⟩
+  constructor
+  · exact h2
+  · exact h
+
+example : P ∧ Q → Q ∧ P := by
+  rintro ⟨(h : P), (h2 : Q)⟩
+  constructor
+  · exact h2
+  · exact h
 
 example : P ∨ Q → Q ∨ P := by
+  intro (h : P ∨ Q)
+  cases h with
+  | inl tifr =>
+    right
+    exact tifr
+  | inr iitb =>
+    left
+    exact iitb
+
+example : P ∨ Q ∨ R → Q ∨ P := by
+  intro h
+  rcases h with hP | hQ | hR
+  · right
+    exact hP
+  · left
+    exact hQ
+  · sorry
+
+example : ¬ (P ∨ Q ∨ R → Q ∨ P) := by
+  push Not
   sorry
 
+example : P ∨ Q ∨ R → Q ∨ P := by -- same as P ∨ (Q ∨ R) → Q ∨ P
+  intro h
+  cases h with
+  | inl tifr =>
+    right
+    exact tifr
+  | inr iit =>
+    cases iit with
+    | inl iitb =>
+      left
+      exact iitb
+    | inr iitd =>
+      sorry
+
 example : (P ∧ Q) ∧ R ↔ P ∧ (Q ∧ R) := by
-  sorry
+  constructor
+  · sorry
+  · sorry
 
 example : (P ∧ Q → R) ↔ (P → Q → R) := by
   sorry
