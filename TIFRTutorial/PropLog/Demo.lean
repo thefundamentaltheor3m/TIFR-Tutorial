@@ -85,6 +85,7 @@ example : P ∧ Q → Q ∧ P := by
   · exact h
 
 example : P ∨ Q → Q ∨ P := by
+  -- tauto
   intro (h : P ∨ Q)
   cases h with
   | inl tifr =>
@@ -104,7 +105,7 @@ example : P ∨ Q ∨ R → Q ∨ P := by
   · sorry
 
 example : ¬ (P ∨ Q ∨ R → Q ∨ P) := by
-  push Not
+  -- push Not
   sorry
 
 example : P ∨ Q ∨ R → Q ∨ P := by -- same as P ∨ (Q ∨ R) → Q ∨ P
