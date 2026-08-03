@@ -86,7 +86,9 @@ section simp_tactic
 `simp` ("simplify") repeatedly rewrites the goal with the lemmas that the library has tagged
 `@[simp]`, in the hope of turning it into something trivially true. Variations:
 * `simp [h₁, h₂]` uses `h₁` and `h₂` in addition to the default simp set;
+* `simp only [h₁, h₂]` uses *only* the lemmas listed, and nothing else;
 * `simp at h` simplifies the hypothesis `h`, and `simp_all` simplifies everything in sight;
+* `simpa using h` simplifies both `h` and the goal, and then closes the goal with `h`;
 * `simp?` reports the list of lemmas that were actually used, which is an excellent way of
   learning the names of library lemmas.
 
@@ -106,9 +108,11 @@ example (l : List ℕ) : (l ++ []).length = l.length := by
 example {α : Type*} (s : Set α) : s ∩ ∅ = ∅ := by
   simp
 
--- Simplifying a hypothesis rather than the goal.
+-- Simplifying a hypothesis rather than the goal. Note that we use `simp only [...]`, which is
+-- restricted to the lemmas we list: a bare `simp at h` would work here too, but the proof would
+-- then silently depend on the whole simp set, and would break if that set ever changed.
 example (n : ℕ) (h : n + 0 = 5) : n = 5 := by
-  simp at h
+  simp only [Nat.add_zero] at h
   exact h
 
 /-! ### Exercises -/
@@ -218,7 +222,7 @@ section aesop_tactic
 `aesop` ("Automated Extensible Search for Obvious Proofs") searches for a proof by combining
 `simp` with a collection of safe introduction and elimination rules, the local hypotheses, and
 anything the library has tagged `@[aesop]`. It is particularly good at the kind of goal about
-logic, sets and subsets whose proof is entirely routine.
+logic and set membership whose proof is entirely routine.
 
 `aesop?` prints the proof it found, so you can read it and, more often than not, shorten it.
 -/
@@ -229,21 +233,28 @@ example (P Q : Prop) (hp : P) (hq : Q) : P ∧ Q := by
 example (P Q : Prop) (h : P ∧ Q) : Q ∧ P := by
   aesop
 
-example {α : Type*} (s t : Set α) : s ∩ t ⊆ s ∪ t := by
+example {α : Type*} (s t : Set α) (x : α) (hx : x ∈ s) : x ∈ s ∪ t := by
   aesop
 
-example {α : Type*} (s t : Set α) (x : α) (hx : x ∈ s) : x ∈ s ∪ t := by
+/-
+A word of warning: `aesop` will *not* unfold `s ⊆ t` into `∀ x, x ∈ s → x ∈ t` for you, so on a
+subset goal it fails immediately, complaining that it "made no progress". Introduce the point
+yourself with `intro`, and `aesop` is then perfectly happy.
+-/
+example {α : Type*} (s t : Set α) : s ∩ t ⊆ s ∪ t := by
+  intro x hx
   aesop
 
 /-! ### Exercises -/
 
-example {α : Type*} (s t : Set α) : s ∩ t ⊆ s := by
-  sorry
-
-example {α : Type*} (s t u : Set α) (hst : s ⊆ t) (htu : t ⊆ u) : s ⊆ u := by
-  sorry
-
 example (P Q R : Prop) (hpq : P → Q) (hqr : Q → R) : P → R := by
+  sorry
+
+example {α : Type*} (s t : Set α) (x : α) (hx : x ∈ s ∩ t) : x ∈ t ∪ s := by
+  sorry
+
+-- Remember the warning above: this one needs a little help before `aesop` can take over.
+example {α : Type*} (s t : Set α) : s ∩ t ⊆ s := by
   sorry
 
 end aesop_tactic
